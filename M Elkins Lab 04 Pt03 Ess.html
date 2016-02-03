@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Moving Circle</title>
+</head>
+<body>
+
+    <canvas id="myCanvas" width="400" height="400" style = "border: 2px solid #000000;"></canvas>
+
+    <script>
+
+        var canv = document.getElementById("myCanvas");  // working with yellow bordered canvas
+        var contxt = canv.getContext("2d");  // in 2d
+        contxt.strokeStyle = "#f40085";  // purple
+        contxt.beginPath();
+        contxt.arc(100, 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle with a 6 point border
+        contxt.stroke();
+
+        var counts = 1;
+        var myInt = setInterval(moveCircle, 25);
+
+        function moveCircle () {
+
+            contxt.clearRect(0, 0, 400, 400);
+            contxt.strokeStyle = "#f40085";  // purple
+            contxt.beginPath();
+            contxt.arc((counts*10)+ 100, (counts*0)+ 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle with a 6 point border
+            contxt.stroke();
+            counts++;
+
+        }
+
+    </script>
+
+
+</body>
+</html>

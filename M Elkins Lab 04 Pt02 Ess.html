@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvases</title>
+</head>
+<body>
+
+    <canvas id = "myCanvas" width="400" height="400" style = "border: 10px solid #fffd00;">
+    </canvas>
+
+    <script>
+
+        var canv = document.getElementById("myCanvas");  // working with yellow bordered canvas
+        var contxt = canv.getContext("2d");  // in 2d
+        contxt.fillStyle = "#a5fb00";  // green
+        contxt.fillRect (0, 0, 400, 400);  // draw a big square
+        contxt.fillStyle = "#990DEC";  // purple
+        contxt.fillRect (20, 20, 360, 360);  // draw a square 20 in from the edge of the green square for 360 in each direction
+
+        contxt.moveTo(20, 20);  // go to the top left corner of the purple square
+        contxt.strokeStyle = "#fffd00";  // yellow again
+        contxt.lineWidth = 10;  // wide line
+        contxt.lineTo(380, 380);  // draw diagonally across purple square
+        contxt.stroke();
+
+        // Nice idea, but too much math for right now  ; )
+//        for (var i = 1; i < 6; i ++){
+        //            contxt.moveTo(10+(120*i), (10*i));
+        //            contxt.lineWidth = 6;
+        //            contxt.lineTo((10*i), 10+(120*i));
+        //            contxt.stroke();
+        //        }
+
+        contxt.strokeStyle = "#f40085";  // purple
+        contxt.beginPath();
+        contxt.arc(100, 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle with a 6 point border
+        contxt.stroke();
+
+        contxt.beginPath();
+        contxt.lineWidth = 4;  // go to a 4 point line
+        contxt.arc(136, 136, 30, 0, 2*Math.PI);  // go to the point from which a circle of r=30 can be drawn such that the circle just touches the previous circle
+        contxt.stroke();
+
+        contxt.strokeStyle = "#a5fb00";  // green
+        contxt.beginPath();
+        contxt.lineWidth = 2;  // got to a 2 point line
+        contxt.arc(200, 200, 60, 0, 2*Math.PI);  // same treatment as above
+        contxt.stroke();
+
+    </script>
+
+</body>
+</html>
