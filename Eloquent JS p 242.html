@@ -10,5 +10,51 @@
 
     <!--create an orange box-->
     <div style="background: orange; width: 60px; height: 20px;"></div>
+
+    <script>
+
+        var lastX; // last x position
+        var rect = document.querySelector("div");  // gets an array of objects that are divs, but there is only one, so we're dealing with the rectangle we drew
+
+        rect.addEventListener("mousedown", function (event){ // everytime the mouse is clicked down ...
+
+            if (event.which == 1){  // user clicked the left button, normal click
+
+                lastX = event.pageX; // last is now current x position
+                addEventListener("mousemove", moved);  // when the mouse moves call move method
+                event.preventDefault(); // prevent selection, i.e. when the mouse is down the default action is to select whatevere the mouse is on, but we're not doing that
+            }
+        });
+
+        function buttonPressed (event){
+
+            // gives a value depending on the status of the button up or down
+
+            if (event.buttons == null){
+                return event.which != 0;
+            } else {
+                return event.buttons != 0;
+            }
+
+        }
+
+
+        function moved (event) {
+
+            if (!buttonPressed(event)) {  // if the user isn't still holding down the button
+
+                removeEventListener("mousemove", moved); // stop calling this moved method when the mouse moves, but as long as the button is down, every time the mouse moves, we're going to be in this method
+
+            } else {
+
+                var dist = event.pageX - lastX;  // the mouse has been dragged this far
+                var newWidth = Math.max(10, rect.offsetWidth + dist); // move the house at least 10 pixels, or however far the mouse has actually movved
+                rect.style.width = newWidth + "px"; // rewrite the width property of the div element that represents the orange rectangle
+                lastX = event.pageX;
+
+            }
+
+        }
+    </script>
 </body>
 </html>
