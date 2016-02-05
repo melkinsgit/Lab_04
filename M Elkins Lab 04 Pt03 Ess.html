@@ -14,20 +14,21 @@
         var contxt = canv.getContext("2d");  // in 2d
         contxt.strokeStyle = "#f40085";  // purple
         contxt.beginPath();
-        contxt.arc(100, 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle with a 6 point border
+        contxt.arc(100, 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle of radius 15
         contxt.stroke();
 
         var counts = 1;
-        var myInt = setInterval(moveCircle, 25);
+        var myInt = setInterval(moveCircle, 25);  // every 15 milliseconds call the function named moveCircle
 
+        // this function advances a circle from its starting position across a canvas to the right
         function moveCircle () {
 
-            contxt.clearRect(0, 0, 400, 400);
+            contxt.clearRect(0, 0, 400, 400);  // erase the circle that is there
             contxt.strokeStyle = "#f40085";  // purple
             contxt.beginPath();
-            contxt.arc((counts*10)+ 100, (counts*0)+ 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle with a 6 point border
+            contxt.arc((counts*10)+ 100, (counts*0)+ 100, 15, 0, 2*Math.PI);  // draw the circle moving 10 points to the right of the starting position - if the y-position is also incremented by (counts*1) the circle moves diagonally down to the right
             contxt.stroke();
-            counts++;
+            counts++;  // increment count so that next time through, the circle will be drawn ever farther to the right
 
         }
 
