@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Maps Lab 04 Pt 01 ADV</title>
+    <link rel="stylesheet" type="text/css" href="MElkinsLab04Pt01AdvCSS.css">
+    <!--<style> #map {-->
+        <!--width: 500px;-->
+        <!--height: 400px;-->
+        <!--background-color: #00ffff;-->
+        <!--color: #fffd00;-->
+    <!--}-->
+    <!--</style>-->
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        function initMap () {
+
+            var mapDiv = document.getElementById("map")
+//            var map = new google.maps.Map(mapDiv, {
+//                center: {lat: 44.540, lng: -78.546},
+//                zoom: 8
+//                }  // end second parameter of Map
+//            );  // end of Map call and semi to end line of code
+
+            // the following is from Clara's week 4 examples
+
+            //Set three required options to display the map
+            //Other options such as preventing scrolling or zooming, are available
+            var mapOptions = {
+                center : new google.maps.LatLng(47, -93),   // Lat and long to center the map
+                zoom : 5,                                   // 0 = the whole world, 22 = max zoom
+                mapTypeId : google.maps.MapTypeId.ROADMAP   //or SATELLITE, HYBRID or TERRAIN
+            };
+
+            //And create the map, with the options specified
+            var map = new google.maps.Map(mapDiv, mapOptions);
+
+             //Can add features, points of interest, routes, lines etc. to maps
+             //Adding a marker to the map
+             //Like the map, set the options for the marker
+             var markerOptions = {
+                 position : new google.maps.LatLng(44.97, -93.26), //Where?
+                 map : map,                       //What map?
+                 draggable : false,               //No moving the marker!
+                 title : "Minneapolis is here",    //Tooltip/rollover text
+             };
+
+             //Create the marker, with the options above
+             //A new marker with the map option set is automatically added to
+             //the map it belongs to.
+             var marker = new google.maps.Marker(markerOptions);
+
+
+             var infowindow = new google.maps.InfoWindow ( {
+                 content : "Minneapolis is right here"
+             });
+
+             marker.addListener("click", function() {
+                infowindow.open(map, marker);
+             });
+
+        }  // end of fn
+
+    </script>
+
+    <!-- to access google map API; doesn't go until initMap has been loaded -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+
+</body>
+</html>

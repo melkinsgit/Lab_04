@@ -6,84 +6,29 @@
 </head>
 <body>
 
-    <!-- The foillowing code was taken from Eloquent Java p 242; I have added all the comments; I have commented out code that doesn't work for this example and I have added code where noted New in the comments -->
-    <!--<p>Drag the bar to change its width.</p>-->
+    <!-- The concept of the following code was taken from Eloquent Java p 242 and my Lab 04 Pt03 Ess exercise; I have added all the comments; I have deleted a bunch of code that isn't necessary for this example and I have added code where noted New in the comments -->
 
     <!-- New instruction line -->
     <p>Click and drag your mouse to move a circle across the screen.</p>
-
-    <!--create an orange box-->
-    <!--<div style="background: orange; width: 60px; height: 20px;"></div>-->
 
     <!-- my canvas from Ess Pt03 -->
     <canvas id="myCanvas" width="400" height="400" style = "border: 2px solid #000000;"></canvas>
 
     <script>
 
-        // this block is my original circle from Ess Pt03
+        // this block is from my original circle from Ess Pt03
         var canv = document.getElementById("myCanvas");  // working with yellow bordered canvas
         var contxt = canv.getContext("2d");  // in 2d
         contxt.strokeStyle = "#f40085";  // purple
-        contxt.beginPath();
-        contxt.arc(100, 100, 15, 0, 2*Math.PI);  // go to x, y (100, 100) and draw a circle of radius 15
-        contxt.stroke();
 
-
-//        var lastX; // last x position
-
-        // New create circle var
-        var circle = document.querySelector("div");  // gets an array of objects that are divs, but there is only one, so we're dealing with the rectangle we drew
-
-        circle.addEventListener("mousedown", function (event){ // everytime the mouse is clicked down ...
-
-            if (event.which == 1){  // user clicked the left button, normal click
-
-                lastX = event.pageX; // last is now current x position
-                addEventListener("mousemove", moved);  // when the mouse moves call move method
-                event.preventDefault(); // prevent selection, i.e. when the mouse is down the default action is to select whatevere the mouse is on, but we're not doing that
-            }
-        });
-
-        function buttonPressed (event){
-
-            // gives a value depending on the status of the button up or down
-
-            if (event.buttons == null){
-                return event.which != 0;
-            } else {
-                return event.buttons != 0;
-            }
-
-        }
-
+        addEventListener("mousemove", moved);  // add an event listener to the whole screen so that when the mouse moves call moved method
 
         function moved (event) {
 
-            if (!buttonPressed(event)) {  // if the user isn't still holding down the button
-
-                removeEventListener("mousemove", moved); // stop calling this moved method when the mouse moves, but as long as the button is down, every time the mouse moves, we're going to be in this method
-
-            } else {
-
-                var dist = event.pageX - lastX;  // the mouse has been dragged this far
-                var newWidth = Math.max(10, rect.offsetWidth + dist); // move the house at least 10 pixels, or however far the mouse has actually movved
-                rect.style.width = newWidth + "px"; // rewrite the width property of the div element that represents the orange rectangle
-                lastX = event.pageX;
-
-            }
-
-        }
-
-        // this is my moveCircle from Pt03 Ess
-        function moveCircle () {
-
-//            contxt.clearRect(0, 0, 400, 400);  // erase the circle that is there
-            contxt.strokeStyle = "#f40085";  // purple
+            // draw a circle where the mouse is
             contxt.beginPath();
-            contxt.arc((counts*10)+ 100, (counts*0)+ 100, 15, 0, 2*Math.PI);  // draw the circle moving 10 points to the right of the starting position - if the y-position is also incremented by (counts*1) the circle moves diagonally down to the right
+            contxt.arc(event.pageX, event.pageY, 15, 0, 2*Math.PI);
             contxt.stroke();
-            counts++;  // increment count so that next time through, the circle will be drawn ever farther to the right
-
         }
     </script>
 </body>
