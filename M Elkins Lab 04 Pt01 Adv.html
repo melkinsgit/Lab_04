@@ -6,205 +6,129 @@
     <link rel="stylesheet" type="text/css" href="MElkinsLab04Pt01AdvCSS.css">
 </head>
 <body>
-<div>
+    <div>
 
-    <button id="mplsButton">Minneapolis</button>
-    <button id="madButton">Madison</button>
-    <button id="milButton">Milwaukee</button>
+        <p>Click on the Minneapolis button and the click the marker that you think is Minneapolis.</p>
+        <button id="mplsButton">Minneapolis</button>
 
-</div>
-<div id="map"></div>
+    </div>
+    <div id="map"></div>
 
-<script>
+    <script>
 
-    // got this idea from Anna; she recommended this per the Squirrel example
-    var City = function (name, lat, long) {
-        this.lat = lat;
-        this.long = long;
-        this.name = name;
-    };
-
-    // I'm putting these outside any functions so they can be "global" to all functions in this script
-    var mplsCity = new City ("Minneapolis", 44.97, -93.26);
-    var madCity = new City ("Madison",43.07, -89.4);
-    var milCity = new City ("Milwaukee", 43.05, -87.95);
-
-    // Again making these "global"
-    var mplsMarker;
-    var madMarker;
-    var milMarker;
-
-    function initMap () {
-
-        // for my map style I modified what I found at:  https://developers.google.com/maps/documentation/javascript/examples/maptype-styled-simple
-        var customMapType = new google.maps.StyledMapType([
-            {
-                stylers: [
-                    {visibility: 'simplified'},  // simplifies the road lines
-                    {gamma: 0.5},
-                    {weight: 0.5}
-                ]
-            },
-            {
-                elementType: 'labels',
-                stylers: [{visibility: 'off'}]
-            },
-            {
-                featureType: 'water'
-            }
-        ], {
-            name: 'Custom Style'
-        });
-
-        var customMapTypeId = 'custom_style';
-
-        var mapDiv = document.getElementById("map");
-
-        var mapOptions = {
-            center : new google.maps.LatLng(44.2972, -90.8492),   // Lat and long to center the map, I chose a spot that was between the three markers I'll be adding
-            zoom : 5,                                   // 0 = the whole world, 22 = max zoom
-//                mapTypeId : google.maps.MapTypeId.ROADMAP,   //or SATELLITE, HYBRID or TERRAIN
-            mapTypeControlOptions: {
-                mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]}
+        // got this idea from Anna; she recommended this per the Squirrel example
+        var City = function (name, lat, long) {
+            this.lat = lat;
+            this.long = long;
+            this.name = name;
         };
 
-        // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
+        // I'm putting these outside any functions so they can be "global" to all functions in this script
+        var mplsCity = new City ("Minneapolis", 44.97, -93.26);
+        var madCity = new City ("Madison",43.07, -89.4);
+        var milCity = new City ("Milwaukee", 43.05, -87.95);
 
-        //And create the map, with the options specified
-        var map = new google.maps.Map(mapDiv, mapOptions);
+        // Again making these "global"
+        var mplsMarker;
+        var madMarker;
+        var milMarker;
 
-        map.mapTypes.set(customMapTypeId, customMapType);
-        map.setMapTypeId(customMapTypeId);
+        function initMap () {
 
-        // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
+            // for my map style I modified what I found at:  https://developers.google.com/maps/documentation/javascript/examples/maptype-styled-simple
+            var customMapType = new google.maps.StyledMapType([
+                {
+                    stylers: [
+                        {visibility: 'simplified'},  // simplifies the road lines
+                        {gamma: 0.5},
+                        {weight: 0.5}
+                    ]
+                },
+                {
+                    elementType: 'labels',
+                    stylers: [{visibility: 'off'}]
+                },
+                {
+                    featureType: 'water'
+                }
+            ], {
+                name: 'Custom Style'
+            });
 
-        //Can add features, points of interest, routes, lines etc. to maps
-        //Adding a marker to the map
-        //Like the map, set the options for the marker
-        mplsOptions = {
-            position : new google.maps.LatLng(mplsCity.lat, mplsCity.long), //Where?
-            map : map,                       //What map?
-            draggable : false,               //No moving the marker!
-//                title : "Minneapolis is here",    //Tooltip/rollover text
-        };
+            var customMapTypeId = 'custom_style';
 
-        madOptions = {
-            position : new google.maps.LatLng(madCity.lat, madCity.long), //Where?
-            map : map,                       //What map?
-            draggable : false,               //No moving the marker!
-//                title : "Madison is here",    //Tooltip/rollover text
-        };
+            var mapDiv = document.getElementById("map");
 
-        milOptions = {
-            position : new google.maps.LatLng(milCity.lat, milCity.long), //Where?
-            map : map,                       //What map?
-            draggable : false,               //No moving the marker!
-//                title : "Milwaukee is here",    //Tooltip/rollover text
-        };
+            var mapOptions = {
+                center : new google.maps.LatLng(44.2972, -90.8492),   // Lat and long to center the map, I chose a spot that was between the three markers I'll be adding
+                zoom : 5,                                   // 0 = the whole world, 22 = max zoom
+    //                mapTypeId : google.maps.MapTypeId.ROADMAP,   //or SATELLITE, HYBRID or TERRAIN
+                mapTypeControlOptions: {
+                    mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]}
+            };
 
-        //Create the marker, with the options above
-        //A new marker with the map option set is automatically added to
-        //the map it belongs to.
-        mplsMarker = new google.maps.Marker(mplsOptions);
-        madMarker = new google.maps.Marker(madOptions);
-        milMarker = new google.maps.Marker(milOptions);
+            // the following includes code from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
 
+            //And create the map, with the options specified
+            var map = new google.maps.Map(mapDiv, mapOptions);
 
-//            mplsInfo = new google.maps.InfoWindow ( {
-//                 content : "Minneapolis is right here"
-//             });
-//
-//            madInfo = new google.maps.InfoWindow ( {
-//                content : "Madison is right here"
-//            });
-//
-//            milInfo = new google.maps.InfoWindow( {
-//                content : "Milwaukee is right here"
-//            });
+            // Add the custom style features
+            map.mapTypes.set(customMapTypeId, customMapType);
+            map.setMapTypeId(customMapTypeId);
 
-//            mplsMarker.addListener("click", function() {
-////                mplsInfo.open(map, mplsMarker);
-//            });
-//
-//            madMarker.addListener("click", function () {
-////                madInfo.open(map, madMarker);
-//            });
-//
-//            milMarker.addListener("click", function () {
-////                milInfo.open(map, milMarker);
-//            });
+            //Can add features, points of interest, routes, lines etc. to maps
+            //Adding a marker to the map
+            //Like the map, set the options for the marker
+            mplsOptions = {
+                position : new google.maps.LatLng(mplsCity.lat, mplsCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+            };
 
-    }  // end of fn
+            madOptions = {
+                position : new google.maps.LatLng(madCity.lat, madCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+            };
 
-    var mplsDetails = document.getElementById("mplsButton");
-    mplsDetails.addEventListener("click", checkMpls);
+            milOptions = {
+                position : new google.maps.LatLng(milCity.lat, milCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+            };
 
-    var milDetails = document.getElementById("milButton");
-    milDetails.addEventListener("click", checkMil);
+            //Create the marker, with the options above
+            //A new marker with the map option set is automatically added to
+            //the map it belongs to.
+            mplsMarker = new google.maps.Marker(mplsOptions);
+            madMarker = new google.maps.Marker(madOptions);
+            milMarker = new google.maps.Marker(milOptions);
 
-    var madDetails = document.getElementById("madButton");
-    madDetails.addEventListener("click", checkMad);
+        }  // end of initMap fn
 
-    function checkMpls () {
+        var mplsDetails = document.getElementById("mplsButton");
+        mplsDetails.addEventListener("click", checkMpls);
 
-        console.log("In method checkMpls");
+        function checkMpls () {
 
-        google.maps.event.addListener(madMarker,"click",function() { alert("Sorry!\nThis is Madison!"); })
-        google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is Milwaukee!"); })
-        google.maps.event.addListener(mplsMarker,"click",function() { alert("Right!\nYou found Minneapolis!"); })
+            console.log("In method checkMpls");
 
+            // got this from Anna:
+            // got event listener syntax from http://stackoverflow.com/questions/2489483/google-maps-marker-click-event
+            var madMarkList = google.maps.event.addListener(madMarker,"click",function() { alert("Sorry!\nThis is Madison!"); })
+            var milMarkList = google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is Milwaukee!"); })
+            var mplsMarkList = google.maps.event.addListener(mplsMarker,"click",function() {
+                alert("Right!\nYou found Minneapolis!");
+                google.maps.event.removeListener(mplsMarkList);  // added this so that once you get the right city the game ends
+                google.maps.event.removeListener(madMarkList);
+                google.maps.event.removeListener(milMarkList);
+            })
+        }
 
-//            mplsMarker.addListener("click", isItMpls());
-//            addEventListener("click", function () {isItMpls(event)});
-    }
+    </script>
 
-    function checkMad () {
-
-        console.log("In method checkMad");
-
-        google.maps.event.addListener(madMarker,"click",function() { alert("Right!\nYou found Madison!"); })
-        google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is Milwaukee!"); })
-        google.maps.event.addListener(mplsMarker,"click",function() { alert("Sorry!\nThis is Minneapolis!"); })
-
-
-//            mplsMarker.addListener("click", isItMpls());
-//            addEventListener("click", function () {isItMpls(event)});
-    }
-
-    function checkMil () {
-
-        console.log("In method checkMil");
-
-        google.maps.event.addListener(madMarker,"click",function() { alert("Sorry!\nThis is Madison!"); })
-        google.maps.event.addListener(milMarker,"click",function() { alert("Right!\nYou found Milwaukee!"); })
-        google.maps.event.addListener(mplsMarker,"click",function() { alert("Sorry!\nThis is Minneapolis!"); })
-
-
-//            mplsMarker.addListener("click", isItMpls());
-//            addEventListener("click", function () {isItMpls(event)});
-    }
-
-    // got event listener syntax from http://stackoverflow.com/questions/2489483/google-maps-marker-click-event
-    //        google.maps.event.addListener(markDuluth,"click",function() { alert("Wrong!\nThis is Duluth!"); })
-    //        google.maps.event.addListener(markFargo,"click",function() { alert("Wrong!\nThis is Fargo!"); })
-    //        google.maps.event.addListener(markMSP,"click",function() { alert("Correct!\nYou found Minneapolis!"); })
-
-    //        function isItMpls () {
-    //
-    //            console.log("In method isItMpls");
-    //
-    //            if (marker.getLabel().text == "Minneapolis is right here"){
-    //                console.log("That's correct!!");
-    //            } else {
-    //                console.log ("Sorry, try again.");
-    //            }
-    //
-    //        }
-
-</script>
-
-<!-- to access google map API; doesn't go until initMap has been loaded -->
-<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+    <!-- to access google map API; doesn't go until initMap has been loaded -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
 
 </body>
 </html>
