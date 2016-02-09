@@ -45,7 +45,7 @@
                     ]
                 },
                 {
-                    elementType: 'labels',
+                    elementType: 'labels',   // makes EVERY label invisible
                     stylers: [{visibility: 'off'}]
                 },
                 {
@@ -62,9 +62,8 @@
             var mapOptions = {
                 center : new google.maps.LatLng(44.2972, -90.8492),   // Lat and long to center the map, I chose a spot that was between the three markers I'll be adding
                 zoom : 5,                                   // 0 = the whole world, 22 = max zoom
-    //                mapTypeId : google.maps.MapTypeId.ROADMAP,   //or SATELLITE, HYBRID or TERRAIN
                 mapTypeControlOptions: {
-                    mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]}
+                    mapTypeIds: [customMapTypeId]}
             };
 
             // the following includes code from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee

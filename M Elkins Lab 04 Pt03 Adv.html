@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Maps Lab 04 Pt 02 ADV</title>
+    <link rel="stylesheet" type="text/css" href="MElkinsLab04Pt03AdvCSS.css">
+</head>
+<body>
+
+    <div>
+
+        <button id="midWestButton">Find Minneapolis</button>
+        <button id="caliButton">Find Fresno</button>
+        <button id="eastButton">Find Stamford</button>
+
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        var AreaMap = function (lat, long, zoom){
+            this.lat = lat;
+            this.long = long;
+            this.zoom = zoom;
+        };
+
+        var startMap = new AreaMap( 39.2930704,-102.2608346, 5);
+        var midMap;
+        var eastMap;
+        var caliMap;
+
+        // got this idea from Anna; she recommended this per the Squirrel example
+        var City = function (name, lat, long) {
+            this.name = name;
+            this.lat = lat;
+            this.long = long;
+        };
+
+        var mplsCity = new City ("Minneapolis", 44.97, -93.26);
+        var madCity = new City ("Madison",43.07, -89.4);
+        var milCity = new City ("Milwaukee", 43.05, -87.95);
+//        var sanFranCity = new City ("San Francsico",);
+//        var sacraCity = new City ("Sacramento",);
+//        var fresnoCity = new City ("Fresno",);
+//        var stamCity = new City ("Stamford",);
+//        var havenCity = new City ("New Haven", );
+//        var provCity = new City ("Providence", );
+
+        var mplsMarker;
+        var madMarker;
+        var milMarker;
+        var sanMarker;
+        var sacraMarker;
+        var fresnoMarker;
+        var stamMarker;
+        var havenMarker;
+        var provMarker;
+
+        function initMap () {
+
+            // for my map style I modified what I found at:  https://developers.google.com/maps/documentation/javascript/examples/maptype-styled-simple
+            var customMapType = new google.maps.StyledMapType([
+                {
+                    stylers: [
+//                        {hue: '#890000'},
+                        {visibility: 'simplified'},  // simplifies the road lines
+                        {gamma: 0.5},
+                        {weight: 0.5}
+                    ]
+                },
+                {
+                    elementType: 'labels',
+                    stylers: [{visibility: 'off'}]
+                },
+                {
+                    featureType: 'water',
+//                    stylers: [{color: '#890000'}]
+                }
+            ], {
+                name: 'Custom Style'
+            });
+
+            var customMapTypeId = 'custom_style';
+
+            var mapDiv = document.getElementById("map");
+
+            var mapOptions = {
+                center : new google.maps.LatLng(startMap.lat, startMap.long),   // Lat and long to center the map
+                zoom : startMap.zoom,                                   // 0 = the whole world, 22 = max zoom
+//                mapTypeId : google.maps.MapTypeId.ROADMAP,   //or SATELLITE, HYBRID or TERRAIN
+                mapTypeControlOptions: {
+                    mapTypeIds: [google.maps.MapTypeId.SATELLITE, customMapTypeId]}
+            };
+
+            // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
+
+            //And create the map, with the options specified
+            var map = new google.maps.Map(mapDiv, mapOptions);
+
+            map.mapTypes.set(customMapTypeId, customMapType);
+            map.setMapTypeId(customMapTypeId);
+
+            // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
+
+            //Can add features, points of interest, routes, lines etc. to maps
+            //Adding a marker to the map
+            //Like the map, set the options for the marker
+            mplsOptions = {
+                position : new google.maps.LatLng(mplsCity.lat, mplsCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+//                title : "Minneapolis is here",    //Tooltip/rollover text
+            };
+
+            madOptions = {
+                position : new google.maps.LatLng(madCity.lat, madCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+//                title : "Madison is here",    //Tooltip/rollover text
+            };
+
+            milOptions = {
+                position : new google.maps.LatLng(milCity.lat, milCity.long), //Where?
+                map : map,                       //What map?
+                draggable : false,               //No moving the marker!
+//                title : "Milwaukee is here",    //Tooltip/rollover text
+            };
+
+            //Create the marker, with the options above
+            //A new marker with the map option set is automatically added to
+            //the map it belongs to.
+            mplsMarker = new google.maps.Marker(mplsOptions);
+            madMarker = new google.maps.Marker(madOptions);
+            milMarker = new google.maps.Marker(milOptions);
+
+        }  // end of fn
+
+//        var mplsDetails = document.getElementById("midWesetButton");
+//        mplsDetails.addEventListener("click", checkMidWest);
+//
+//        var milDetails = document.getElementById("caliButton");
+//        milDetails.addEventListener("click", checkCali);
+//
+//        var madDetails = document.getElementById("eastButton");
+//        madDetails.addEventListener("click", checkEast);
+
+        function checkMidWest () {
+
+            console.log("In method checkMpls");
+
+            // got this from Anna:
+            // got event listener syntax from http://stackoverflow.com/questions/2489483/google-maps-marker-click-event
+            var madMarkList = google.maps.event.addListener(madMarker,"click",function() { alert("Sorry!\nThis is " + madCity.name + "!"); })
+            var milMarkList = google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is " + milCity.name + "!"); })
+            var mplsMarkList = google.maps.event.addListener(mplsMarker,"click",function() {
+                alert("Right!\nYou found " + mplsCity.name + "!");
+                google.maps.event.removeListener(mplsMarkList);  // added this so that once you get the right city the game ends
+                google.maps.event.removeListener(madMarkList);
+                google.maps.event.removeListener(milMarkList);
+            })
+        }
+
+        function checkCali () {
+
+            console.log("In method checkCali");
+
+            var sanFranMarkList = google.maps.event.addListener(sanFranMarker,"click",function() { alert("Sorry!\nThis is " + sanFranCity.name + "!"); })
+            var sacraMarkList = google.maps.event.addListener(sacraMarker,"click",function() { alert("Sorry!\nThis is " + sacraCity.name + "!"); })
+            var fresnoMarkList = google.maps.event.addListener(fresnoMarker,"click",function() { alert("Right!\nYou found " + fresnoCity.name + "!");
+                google.maps.event.removeListener(sanFranMarkList);  // added this so that once you get the right city the game ends
+                google.maps.event.removeListener(fresnoMarkList);
+                google.maps.event.removeListener(sacraMarkList);})
+
+        }
+
+        function checkEast () {
+
+            console.log("In method checkEast");
+
+            var stamMarkList = google.maps.event.addListener(madMarker,"click",function() { alert("Right!\nThis is " + stamCity.name + "!"); });
+            var havenMarkList = google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is " + havenCity.name + "!"); });
+            var provMarkList = google.maps.event.addListener(mplsMarker,"click",function() { alert("Sorry!\nThis is " + provCity.name + "!"); });
+
+        }
+
+    </script>
+
+    <!-- to access google map API; doesn't go until initMap has been loaded -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+
+    <script>
+
+
+
+    </script>
+
+</body>
+</html>
