@@ -59,7 +59,7 @@
 //        var cities;
 
         var customMapType;
-        var customMapTypeID = "custom_style";
+        var customMapTypeId = "custom_style";
 
         function initMap () {
 
@@ -102,17 +102,18 @@
             map.setMapTypeId(customMapTypeId);
 
             var playMidWest = document.getElementById("midWestButton");
+            var midWestDiv = document.getElementById("midMap");
             playMidWest.addEventListener("click", function () {
                 playGame(midWestCities);});
 
             function playGame (cityArray){
-                makeMap(midMap);                // make the region map
-                makeMarkers(midMap.cityMarkers);
+                makeMap(midWestDiv, midMap);                // make the region map
+                makeMarkers(midMap.cityMarkers, midWestCities);
                 }
                 checkMidWest();
             }
 
-            function makeMap (mapObj) {
+            function makeMap (mapDiv, mapObj) {
 
                 var mapOptions = {
                     center: new google.maps.LatLng(mapObj.lat, mapObj.long),   // Lat and long to center the map
@@ -128,6 +129,7 @@
                 var map = new google.maps.Map(mapDiv, mapOptions);
 
                 map.mapTypes.set(customMapTypeId, customMapType);
+                map.setMapTypeId(customMapTypeId);
                 map.setMapTypeId(customMapTypeId);
 
             }
@@ -164,7 +166,7 @@
                     //Create the marker, with the options above
                     //A new marker with the map option set is automatically added to
                     //the map it belongs to.
-                    midMap.cityMarkers[i] = new google.maps.Marker(cityOptions);
+                    markerArray[i] = new google.maps.Marker(cityOptions);
 //                madMarker = new google.maps.Marker(madOptions);
 //                milMarker = new google.maps.Marker(milOptions);
                 }
