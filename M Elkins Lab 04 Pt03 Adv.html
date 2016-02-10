@@ -13,7 +13,7 @@
         <button id="caliButton">Find Fresno</button>
         <button id="eastButton">Find Stamford</button>
         <button id="gameOver">I'm done</button>
-        <div id="score" style="width: 35px; height: 20px;"></div>
+        <p id="score"></p>
 
     </div>
     <div id="map"></div>
@@ -28,7 +28,7 @@
         };
 
         // map object
-        var startMap = new AreaMap( 39.2930704,-102.2608346, 5);
+        var startMap = new AreaMap( 39.2930704,-102.2608346, 4);
 
         // City prototype; got this idea from Anna; she recommended this per the Squirrel example
         var City = function (name, lat, long, winner) {
@@ -117,7 +117,8 @@
             var getScore = document.getElementById("gameOver");
             getScore.addEventListener("click", function () {
                 console.log(points);
-                document.getElementById("score").innerText = points;
+                console.log(document.getElementById("score").innerHTML);
+                document.getElementById("score").innerHTML = "Your score for this game is: " + points.toString();
             });
 
         } // end initMap
