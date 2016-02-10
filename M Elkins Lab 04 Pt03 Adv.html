@@ -12,6 +12,8 @@
         <button id="midWestButton">Find Minneapolis</button>
         <button id="caliButton">Find Fresno</button>
         <button id="eastButton">Find Stamford</button>
+        <button id="gameOver">I'm done</button>
+        <div id="score" style="width: 35px; height: 20px;"></div>
 
     </div>
     <div id="map"></div>
@@ -23,21 +25,18 @@
             this.lat = lat;
             this.long = long;
             this.zoom = zoom;
-            this.cityMarkers = [];
         };
 
-        // map objects
+        // map object
         var startMap = new AreaMap( 39.2930704,-102.2608346, 5);
-        var midMap = new AreaMap (44.2972, -90.8492, 5);
-        var eastMap;
-        var caliMap;
 
         // City prototype; got this idea from Anna; she recommended this per the Squirrel example
-        var City = function (name, lat, long, winner, cityMarkers) {
+        var City = function (name, lat, long, winner) {
             this.name = name;
             this.lat = lat;
             this.long = long;
             this.winner = winner;
+            this.cityMarker = null;
         };
 
         // an array of three city objects
@@ -47,17 +46,18 @@
             new City ("Milwaukee", 43.05, -87.95, false)
         ];
 
-//        var sanFranCity = new City ("San Francisco",);
-//        var sacraCity = new City ("Sacramento",);
-//        var fresnoCity = new City ("Fresno",);
-//        var stamCity = new City ("Stamford",);
-//        var havenCity = new City ("New Haven", );
-//        var provCity = new City ("Providence", );
+        var caliCities = [
+            new City ("San Francisco", 37.7833, -122.4167, false),
+            new City ("Sacramento", 38.5556, -121.4689, false),
+            new City ("Fresno", 36.7500, -119.7667, true)];
 
-//        var map;
-//
-//        var cities;
+        var eastCities = [
+            new City ("Stamford", 41.0528, -73.5389, true),
+            new City ("New Haven", 41.3100, -72.9236, false),
+            new City ("Providence", 41.8236, -71.4222, false)];
 
+        var map;
+        var points = 0;
         var customMapType;
         var customMapTypeId = "custom_style";
 
@@ -77,13 +77,11 @@
                     stylers: [{visibility: 'off'}]
                 },
                 {
-                    featureType: 'water',
+                    featureType: 'water'
                 }
             ], {
                 name: 'Custom Style'
             });
-
-            var customMapTypeId = 'custom_style';
 
             var mapDiv = document.getElementById("map");
             var mapOptions = {
@@ -95,142 +93,96 @@
             };
 
             //And create the map, with the options specified
-            var map = new google.maps.Map(mapDiv, mapOptions);
+            map = new google.maps.Map(mapDiv, mapOptions);
 
             // Add the custom style features
             map.mapTypes.set(customMapTypeId, customMapType);
             map.setMapTypeId(customMapTypeId);
 
             var playMidWest = document.getElementById("midWestButton");
-            var midWestDiv = document.getElementById("midMap");
             playMidWest.addEventListener("click", function () {
-                playGame(midWestCities);});
+                makeMarkers(midWestCities);
+                didYouWin(midWestCities)});
 
-            function playGame (cityArray){
-                makeMap(midWestDiv, midMap);                // make the region map
-                makeMarkers(midMap.cityMarkers, midWestCities);
-                }
-                checkMidWest();
-            }
+            var playCali = document.getElementById("caliButton");
+            playCali.addEventListener("click", function () {
+                makeMarkers(caliCities);
+                didYouWin(caliCities)});
 
-            function makeMap (mapDiv, mapObj) {
+            var playEast = document.getElementById("eastButton");
+            playEast.addEventListener("click", function () {
+                makeMarkers(eastCities);
+                didYouWin(eastCities)});
 
-                var mapOptions = {
-                    center: new google.maps.LatLng(mapObj.lat, mapObj.long),   // Lat and long to center the map
-                    zoom: mapObj.zoom,                                   // 0 = the whole world, 22 = max zoom
-                    mapTypeControlOptions: {
-                        mapTypeIds: [google.maps.MapTypeId.SATELLITE, customMapTypeId]
+            var getScore = document.getElementById("gameOver");
+            getScore.addEventListener("click", function () {
+                console.log(points);
+                document.getElementById("score").innerText = points;
+            });
+
+        } // end initMap
+
+        function didYouWin (cityArray) {
+            for (var k = 0; k < cityArray.length; k++) {
+                cityArray[k].cityMarker.addListener("click", function () {
+                    if (this.winner == false) {
+                        alert("Sorry!\nThis is " + this.name + "!");
+                    } else {
+                        alert("Right!\nYou found " + this.name + "!");
+                        points += 1;
+                        console.log ("just won in " + this.name + " and points is " + points);
                     }
-                };
-
-                // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
-
-                //And create the map, with the options specified
-                var map = new google.maps.Map(mapDiv, mapOptions);
-
-                map.mapTypes.set(customMapTypeId, customMapType);
-                map.setMapTypeId(customMapTypeId);
-                map.setMapTypeId(customMapTypeId);
-
+                });
             }
+        }
 
-            function makeMarkers (markerArray, cityArray) {
+    function makeMarkers(cityArray) {
 
-                // the following is from Clara's week 4 examples - I have added the other two cities - Madison and Milwaukee
+        // the following is from Clara's week 4 examples - I have modified to work with passed array and added some fields to Marker prototype through cityOptions that will be applied to creation of cityMarker
 
-                //Can add features, points of interest, routes, lines etc. to maps
-                //Adding a marker to the map
-                //Like the map, set the options for the marker
-                for (var i = 0; i < cityArray.length; i++) {
-                    var cityOptions = {
-                        position: new google.maps.LatLng(cityArray[i].lat, cityArray[i].long), //Where?
-                        map: midMap,                       //What map?
-                        draggable: false,               //No moving the marker!
-                        name: cityArray[i].name             //Name for checking in game ????
-                    };
+        //Can add features, points of interest, routes, lines etc. to maps
+        //Adding a marker to the map
+        //Like the map, set the options for the marker
+        for (var i = 0; i < cityArray.length; i++) {
+            var cityOptions = {
+                position: new google.maps.LatLng(cityArray[i].lat, cityArray[i].long), //Where?
+                map: map,                       //What map?
+                draggable: false,               //No moving the marker!
+                name: cityArray[i].name,        //Name for checking in game ????
+                winner: cityArray[i].winner
+            };
 
-//                madOptions = {
-//                    position: new google.maps.LatLng(madCity.lat, madCity.long), //Where?
-//                    map: map,                       //What map?
-//                    draggable: false,               //No moving the marker!
-////                title : "Madison is here",    //Tooltip/rollover text
-//                };
-//
-//                milOptions = {
-//                    position: new google.maps.LatLng(milCity.lat, milCity.long), //Where?
-//                    map: map,                       //What map?
-//                    draggable: false,               //No moving the marker!
-////                title : "Milwaukee is here",    //Tooltip/rollover text
-//                };
+                //Create the marker, with the options above
+                //A new marker with the map option set is automatically added to
+                //the map it belongs to.
+            cityArray[i].cityMarker = new google.maps.Marker(cityOptions);
+        }
+    }
 
-                    //Create the marker, with the options above
-                    //A new marker with the map option set is automatically added to
-                    //the map it belongs to.
-                    markerArray[i] = new google.maps.Marker(cityOptions);
-//                madMarker = new google.maps.Marker(madOptions);
-//                milMarker = new google.maps.Marker(milOptions);
-                }
-            }
+    // from https://developers.google.com/maps/documentation/javascript/examples/marker-remove
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+//        clearMarkers();
+        for (var i = 0; i < midWestCities.length; i++) {
+            midWestCities[i].cityMarker = null;
+        }
+        for (var j = 0; j < caliCities.length; j++) {
+            caliCities[j].cityMarker = null;
+        }
+        for (var k = 0; k < eastCities.length; k++) {
+            eastCities[k].cityMarker = null;
+        }
+    }
 
-            function checkMidWest () {
-
-                console.log("In method game checkMap");
-
-                // got this from Anna:
-                // got event listener syntax from http://stackoverflow.com/questions/2489483/google-maps-marker-click-event
-                for (var i = 0; i < midWestCities.length; i++) {
-                    for (var j = 0; j < midMap.cityMarkers.length; j++) {
-                        google.maps.event.addListener(cityMarkers.cityMarkers[j], "click", function () {
-                            if (!midWestCities[i].winner) {
-                                alert("Sorry!\nThis is " + midWestCities[i].name + "!");
-                            } else {
-                                alert("Right!\nYou found " + midWestCities[i].name + "!");
-                            }
-                        });
-                    }
-                }
-
-//                google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is " + milCity.name + "!"); })
-//                var mplsMarkList = google.maps.event.addListener(mplsMarker,"click",function() {
-//                    alert("Right!\nYou found " + mplsCity.name + "!");
-//                    google.maps.event.removeListener(mplsMarkList);  // added this so that once you get the right city the game ends
-//                    google.maps.event.removeListener(madMarkList);
-//                    google.maps.event.removeListener(milMarkList);
-
-        }  // end of fn
-
-
-
-//        function checkCali () {
-//
-//            console.log("In method checkCali");
-//
-//            var sanFranMarkList = google.maps.event.addListener(sanFranMarker,"click",function() { alert("Sorry!\nThis is " + sanFranCity.name + "!"); })
-//            var sacraMarkList = google.maps.event.addListener(sacraMarker,"click",function() { alert("Sorry!\nThis is " + sacraCity.name + "!"); })
-//            var fresnoMarkList = google.maps.event.addListener(fresnoMarker,"click",function() { alert("Right!\nYou found " + fresnoCity.name + "!");
-//                google.maps.event.removeListener(sanFranMarkList);  // added this so that once you get the right city the game ends
-//                google.maps.event.removeListener(fresnoMarkList);
-//                google.maps.event.removeListener(sacraMarkList);})
-//
-//        }
-//
-//        function checkEast () {
-//
-//            console.log("In method checkEast");
-//
-//            var stamMarkList = google.maps.event.addListener(madMarker,"click",function() { alert("Right!\nThis is " + stamCity.name + "!"); });
-//            var havenMarkList = google.maps.event.addListener(milMarker,"click",function() { alert("Sorry!\nThis is " + havenCity.name + "!"); });
-//            var provMarkList = google.maps.event.addListener(mplsMarker,"click",function() { alert("Sorry!\nThis is " + provCity.name + "!"); });
-//
-//        }
-//        }
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
 
     </script>
 
     <!-- to access google map API; doesn't go until initMap has been loaded -->
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
-
-
 
 </body>
 </html>
