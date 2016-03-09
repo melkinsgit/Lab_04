@@ -7,8 +7,18 @@
     <script src="CitiesLab04Pt04Adv.js"></script>
 </head>
 <body>
-    <p id="test">This is the test:</p>
-    <p id="result"></p>
+
+    <div>
+
+        When you're looking for a city, how many other cities would you like on the map?<input type="text" id="numCities" name="numCities" size="6">
+        How many times would you like to play?<input type="text" id="numGames" name="numGames" size="6">
+        <button id="playButton">Let's play!</button>
+        <button id="gameOver">I'm done</button>
+        <p id="score"></p>
+
+    </div>
+
+    <div id="map"></div>
 
     <!-- to access google map API; doesn't go until initMap has been loaded -->
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
